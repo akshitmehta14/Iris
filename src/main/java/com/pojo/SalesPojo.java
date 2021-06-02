@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+// TODO we can maybe have an unique constraint -> sku + store + day
 @Table(name = "sales")
 public class SalesPojo {
     @Id
@@ -11,7 +12,7 @@ public class SalesPojo {
     private int id;
     private int skuId;
     private LocalDate date;
-    private  int storeId;
+    private int storeId;
     private int quantity;
     private double discount;
     private double revenue;

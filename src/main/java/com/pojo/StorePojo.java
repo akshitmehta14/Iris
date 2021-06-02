@@ -8,6 +8,7 @@ public class StorePojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private String branch;
     private String city;
 

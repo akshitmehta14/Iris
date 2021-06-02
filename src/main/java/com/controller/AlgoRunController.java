@@ -27,6 +27,7 @@ public class AlgoRunController {
     }
 
     @ApiOperation(value = "Runs the Algorithm")
+    // TODO re-look the request method
     @RequestMapping(method = RequestMethod.GET)
     public void runAlgo() throws ApiException, IOException {
         algoDto.algoRun();

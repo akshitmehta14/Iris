@@ -1,6 +1,6 @@
 package com.model;
 
-public class SizeIdentificationHelper {
+public class SizeIdentificationData {
     private String category;
     private String subCategory;
     private double revenue;

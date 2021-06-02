@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+// TODO have table annotation and name it accordingly
 public class NoosPojo {
 
     @Id
