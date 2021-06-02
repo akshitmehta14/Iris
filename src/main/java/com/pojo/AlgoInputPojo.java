@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+// TODO have table annotation and name it accordingly
 public class AlgoInputPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,7 @@ public class AlgoInputPojo {
         this.id = id;
     }
 
+    // TODO let's update the table structure to have algo name & value (and description)
     private double liquidationMultiplier;
     private LocalDate date;
     private double goodSize;

@@ -1,6 +1,6 @@
 package com.model;
 
-public class LiquidationHelper {
+public class LiquidationData {
     private String category;
     private String subCategory;
     private int quantity;
@@ -9,6 +9,14 @@ public class LiquidationHelper {
     private double avgDiscount;
     private double avgCleanedDiscount;
     private double cleanedRevenue;
+
+    public LiquidationData() {
+    }
+
+    public LiquidationData(String category, String subCategory) {
+        this.category = category;
+        this.subCategory = subCategory;
+    }
 
     public String getCategory() {
         return category;

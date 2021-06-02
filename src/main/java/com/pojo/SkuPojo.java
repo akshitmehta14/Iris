@@ -10,6 +10,8 @@ public class SkuPojo {
     private int id;
     @Column(nullable = false)
     private String skuCode;
+
+    // TODO style + size should be unique
     private int styleId;
     private String size;
 

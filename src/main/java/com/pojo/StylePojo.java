@@ -10,6 +10,8 @@ public class StylePojo {
     private int id;
     @Column(nullable = false)
     private String styleCode;
+
+    // TODO add validations for these in API as well
     @Column(nullable = false)
     private String brand;
     @Column(nullable = false)
