@@ -1,0 +1,3 @@
+SKU	Style Code	Size
+sku1	1	S
+sku2	2	M

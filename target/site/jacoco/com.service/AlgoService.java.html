@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlgoService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Iris</a> &gt; <a href="index.source.html" class="el_package">com.service</a> &gt; <span class="el_source">AlgoService.java</span></div><h1>AlgoService.java</h1><pre class="source lang-java linenums">package com.service;
+
+import com.dao.AlgoParametersDao;
+import com.pojo.AlgoInputPojo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+<span class="nc" id="L11">public class AlgoService {</span>
+    @Autowired
+    AlgoParametersDao algoParametersDao;
+
+    public void addParameters(AlgoInputPojo inputPojo) throws ApiException {
+<span class="nc" id="L16">        checkParameters(inputPojo);</span>
+<span class="nc" id="L17">        algoParametersDao.add(inputPojo);</span>
+<span class="nc" id="L18">    }</span>
+
+    public AlgoInputPojo selectRecent(){
+<span class="nc" id="L21">        List&lt;AlgoInputPojo&gt; list =  algoParametersDao.selectAll();</span>
+<span class="nc" id="L22">        return list.get(list.size()-1);</span>
+    }
+
+    private void checkParameters(AlgoInputPojo inputPojo) throws ApiException {
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        if(inputPojo.getBadSize()==0.0 &amp;&amp; inputPojo.getGoodSize()==0.0){</span>
+<span class="nc" id="L27">            inputPojo.setGoodSize(75);</span>
+<span class="nc" id="L28">            inputPojo.setBadSize(25);</span>
+        }
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if(inputPojo.getGoodSize()==0.0){</span>
+<span class="nc" id="L31">            inputPojo.setGoodSize(inputPojo.getBadSize());</span>
+        }
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if(inputPojo.getBadSize()==0.0){</span>
+<span class="nc" id="L34">            inputPojo.setBadSize(inputPojo.getGoodSize());</span>
+        }
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if(inputPojo.getGoodSize()&lt;inputPojo.getBadSize()){</span>
+<span class="nc" id="L37">            throw new ApiException(&quot;Good Size percentage cannot be greater than bad size percentage.&quot;);</span>
+        }
+
+<span class="nc" id="L40">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

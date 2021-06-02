@@ -1,0 +1,3 @@
+Style Code	Brand	Category	Sub-Category	MRP	Gender
+stylecode1	brnd1	cat1	sc1	1.0	m1
+stylecode2	brnd2	cat1	sc2	2.0	m2

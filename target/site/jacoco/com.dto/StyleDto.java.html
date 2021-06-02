@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StyleDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Iris</a> &gt; <a href="index.source.html" class="el_package">com.dto</a> &gt; <span class="el_source">StyleDto.java</span></div><h1>StyleDto.java</h1><pre class="source lang-java linenums">package com.dto;
+
+import com.pojo.StylePojo;
+import com.service.ApiException;
+import com.service.StyleService;
+import com.util.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+
+@Service
+<span class="nc" id="L19">public class StyleDto {</span>
+    @Autowired
+    private StyleService styleService;
+
+    public void add(MultipartFile file) throws IOException, ApiException {
+<span class="nc" id="L24">        BufferedReader TSVFile = new BufferedReader(new</span>
+<span class="nc" id="L25">                InputStreamReader(file.getInputStream(), &quot;UTF-8&quot;));</span>
+<span class="nc" id="L26">        String dataRow = TSVFile.readLine(); // Read first line.</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (checkFileHeading(dataRow) == false) {</span>
+<span class="nc" id="L28">            throw new ApiException(&quot;File orientation is not proper&quot;);</span>
+        }
+<span class="nc" id="L30">        boolean errors = scanFileForErrors(file);</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (errors) {</span>
+<span class="nc" id="L32">            throw new ApiException(&quot;File contains some errors.&quot;);</span>
+        }
+<span class="nc" id="L34">        dataRow = TSVFile.readLine();</span>
+
+<span class="nc" id="L36">        int rowNumber = 1;</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        while (dataRow != null) {</span>
+<span class="nc" id="L38">            styleService.add(convertRowsToPojo(dataRow));</span>
+<span class="nc" id="L39">            dataRow = TSVFile.readLine(); // Read next line of data.</span>
+<span class="nc" id="L40">            rowNumber++;</span>
+        }
+<span class="nc" id="L42">    }</span>
+
+    public void selectAll(HttpServletResponse response) throws IOException {
+<span class="nc" id="L45">        List&lt;StylePojo&gt; stylePojo = styleService.selectAll();</span>
+<span class="nc" id="L46">        FileWriter fos = new FileWriter(&quot;files/downloads/style.txt&quot;, false);</span>
+<span class="nc" id="L47">        PrintWriter dos = new PrintWriter(fos);</span>
+<span class="nc" id="L48">        dos.println(&quot;Style Code\tBrand\tCategory\tSub-Category\tMRP\tGender&quot;);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        for (StylePojo s : stylePojo) {</span>
+<span class="nc" id="L50">            dos.print(s.getStyleCode() + '\t' + s.getBrand() + '\t' + s.getCategory() + '\t' + s.getSubCategory() + '\t' + s.getMrp() + '\t' + s.getGender());</span>
+<span class="nc" id="L51">            dos.println();</span>
+<span class="nc" id="L52">        }</span>
+<span class="nc" id="L53">        fos.close();</span>
+<span class="nc" id="L54">        FileUtil.downloadFile(&quot;downloads/style&quot;, response);</span>
+<span class="nc" id="L55">    }</span>
+
+    public void downloadErrors(HttpServletResponse response) throws ApiException, IOException {
+<span class="nc" id="L58">        File file = new File(&quot;C:\\projects\\Iris\\files\\error-files\\style-error.txt&quot;);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (file.exists() == false) {</span>
+<span class="nc" id="L60">            throw new ApiException(&quot;Upload a file first.&quot;);</span>
+        }
+<span class="nc" id="L62">        FileUtil.downloadFile(&quot;error-files/style-error&quot;, response);</span>
+<span class="nc" id="L63">    }</span>
+
+    public boolean scanFileForErrors(MultipartFile file) throws IOException {
+<span class="nc" id="L66">        BufferedReader TSVFile = new BufferedReader(new</span>
+<span class="nc" id="L67">                InputStreamReader(file.getInputStream(), &quot;UTF-8&quot;));</span>
+<span class="nc" id="L68">        boolean ans = false;</span>
+<span class="nc" id="L69">        String dataRow = TSVFile.readLine();</span>
+<span class="nc" id="L70">        int rowNumber = 1;</span>
+<span class="nc" id="L71">        refreshFile();</span>
+<span class="nc" id="L72">        dataRow = TSVFile.readLine();</span>
+<span class="nc" id="L73">        FileWriter fos = new FileWriter(&quot;files/error-files/style-error.txt&quot;, true);</span>
+<span class="nc" id="L74">        PrintWriter dos = new PrintWriter(fos);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        while (dataRow != null) {</span>
+            try {
+<span class="nc" id="L77">                styleService.exists(convertRowsToPojo(dataRow));</span>
+<span class="nc" id="L78">            } catch (ApiException e) {</span>
+<span class="nc" id="L79">                String x = dataRow + '\t' + e.getMessage();</span>
+<span class="nc" id="L80">                System.out.println(x);</span>
+
+<span class="nc" id="L82">                dos.println(rowNumber+&quot;\t&quot;+x);</span>
+<span class="nc" id="L83">                ans = true;</span>
+<span class="nc" id="L84">            }</span>
+<span class="nc" id="L85">            System.out.println(rowNumber);</span>
+<span class="nc" id="L86">            rowNumber++;</span>
+<span class="nc" id="L87">            dataRow = TSVFile.readLine(); // Read next line of data.</span>
+        }
+<span class="nc" id="L89">        fos.close();</span>
+<span class="nc" id="L90">        return ans;</span>
+    }
+
+    private void refreshFile() throws IOException {
+<span class="nc" id="L94">        FileWriter fos = new FileWriter(&quot;files/error-files/style-error.txt&quot;, false);</span>
+<span class="nc" id="L95">        PrintWriter dos = new PrintWriter(fos);</span>
+<span class="nc" id="L96">        dos.println(&quot;Row Number\tStyle Code\tBrand\tCategory\tSub-Category\tMRP\tGender\tError Message&quot;);</span>
+<span class="nc" id="L97">        fos.close();</span>
+<span class="nc" id="L98">    }</span>
+
+    private StylePojo convertRowsToPojo(String dataRow) {
+<span class="nc" id="L101">        StringTokenizer st = new StringTokenizer(dataRow, &quot;\t&quot;);</span>
+<span class="nc" id="L102">        StylePojo stylePojo = new StylePojo();</span>
+<span class="nc" id="L103">        List&lt;String&gt; dataArray = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        while (st.hasMoreElements()) {</span>
+<span class="nc" id="L105">            dataArray.add(st.nextElement().toString());</span>
+        }
+<span class="nc" id="L107">        stylePojo.setStyleCode(dataArray.get(0));</span>
+<span class="nc" id="L108">        stylePojo.setBrand(dataArray.get(1));</span>
+<span class="nc" id="L109">        stylePojo.setCategory(dataArray.get(2));</span>
+<span class="nc" id="L110">        stylePojo.setSubCategory(dataArray.get(3));</span>
+<span class="nc" id="L111">        stylePojo.setMrp(Double.parseDouble(dataArray.get(4)));</span>
+<span class="nc" id="L112">        stylePojo.setGender(dataArray.get(5));</span>
+<span class="nc" id="L113">        return stylePojo;</span>
+    }
+
+    private boolean checkFileHeading(String dataRow) {
+<span class="nc" id="L117">        StringTokenizer st = new StringTokenizer(dataRow, &quot;\t&quot;);</span>
+<span class="nc" id="L118">        List&lt;String&gt; dataArray = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        while (st.hasMoreElements()) {</span>
+<span class="nc" id="L120">            dataArray.add(st.nextElement().toString());</span>
+        }
+<span class="nc bnc" id="L122" title="All 12 branches missed.">        if (!dataArray.get(0).equals(&quot;Style Code&quot;) || !dataArray.get(1).equals(&quot;Brand&quot;) || !dataArray.get(2).equals(&quot;Category&quot;) || !dataArray.get(3).equals(&quot;Sub-Category&quot;) || !dataArray.get(4).equals(&quot;MRP&quot;) || !dataArray.get(5).equals(&quot;Gender&quot;)) {</span>
+<span class="nc" id="L123">            return false;</span>
+        }
+<span class="nc" id="L125">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

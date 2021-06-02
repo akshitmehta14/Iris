@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head th:replace="snippets.html :: name_head"></head>
+
+</head>
+<body>
+<nav th:replace="snippets.html :: name_site_navbar"></nav>
+
+<!-- Top row with form-->
+<form class="form" id="report-form">
+    <div class="row g-2">
+        <div class="form-group col-md">
+            <label for="liquidation-cleanup-multiplier" class="col-form-label">Liquidation Multiplier</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="liquidationMultiplier" id="liquidation-cleanup-multiplier"
+                       placeholder="enter liquidation-multiplier">
+            </div>
+        </div>
+        <div class="form-group col-md">
+            <label for="input-end-date" class="col-form-label">End Date</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" name="date" id="input-end-date" placeholder="enter end-date">
+            </div>
+        </div>
+    </div>
+    <div class="row g-2">
+        <div class="form-group col-md">
+            <label for="good-size" class="col-sm-2 col-form-label">Good Size Percentage</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="goodSize" id="good-size"
+                       placeholder="enter good-size %">
+            </div>
+        </div>
+        <div class="form-group col-md">
+            <label for="bad-size" class="col-sm-2 col-form-label">Bad Size Percentage</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="badSize" id="bad-size" placeholder="enter bad-size %">
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-outline-success btn-lg col-3 offset-lg-8" id="input-parameters">Submit</button>
+    <br><br>
+    <button type="button" class="btn btn-outline-primary btn-lg w-100 p-4" id="run-module">Run Module</button>
+</form>
+
+<br>
+
+<footer th:replace="snippets.html :: name_footer"></footer>
+<script th:src="@{/static/input.js}"/>
+</script>
+</body>
+</html>

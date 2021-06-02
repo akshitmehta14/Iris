@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StoreDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Iris</a> &gt; <a href="index.source.html" class="el_package">com.dto</a> &gt; <span class="el_source">StoreDto.java</span></div><h1>StoreDto.java</h1><pre class="source lang-java linenums">package com.dto;
+
+import com.pojo.StorePojo;
+import com.service.ApiException;
+import com.service.StoreService;
+import com.util.FileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+
+@Service
+<span class="nc" id="L20">public class StoreDto {</span>
+    @Autowired
+    private StoreService storeService;
+
+    public void add(@RequestPart MultipartFile file) throws IOException, ApiException {
+<span class="nc" id="L25">        BufferedReader TSVFile = new BufferedReader(new</span>
+<span class="nc" id="L26">                InputStreamReader(file.getInputStream(), &quot;UTF-8&quot;));</span>
+<span class="nc" id="L27">        String dataRow = TSVFile.readLine(); // Read first line.</span>
+<span class="nc" id="L28">        int rowNumber = 0;</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        while (dataRow != null) {</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            if(rowNumber==0){</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">                if(checkFileHeading(dataRow)==false){</span>
+<span class="nc" id="L32">                    throw new ApiException(&quot;File orientation is not proper&quot;);</span>
+                }
+            }
+            else {
+<span class="nc" id="L36">                storeService.add(convertRowsToPojo(dataRow));</span>
+            }
+<span class="nc" id="L38">            dataRow = TSVFile.readLine();// Read next line of data.</span>
+<span class="nc" id="L39">            rowNumber++;</span>
+        }
+<span class="nc" id="L41">    }</span>
+
+    public void selectAll(HttpServletResponse response) throws IOException {
+<span class="nc" id="L44">        List&lt;StorePojo&gt; stylePojo = storeService.selectAll();</span>
+<span class="nc" id="L45">        FileWriter fos = new FileWriter(&quot;files/downloads/store.txt&quot;);</span>
+<span class="nc" id="L46">        PrintWriter dos = new PrintWriter(fos);</span>
+<span class="nc" id="L47">        dos.println(&quot;Branch\tCity&quot;);</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        for(StorePojo s:stylePojo){</span>
+<span class="nc" id="L49">            dos.print(s.getBranch()+'\t'+s.getCity());</span>
+<span class="nc" id="L50">            dos.println();</span>
+<span class="nc" id="L51">        }</span>
+<span class="nc" id="L52">        fos.close();</span>
+<span class="nc" id="L53">        FileUtil.downloadFile(&quot;downloads/store&quot;,response);</span>
+<span class="nc" id="L54">    }</span>
+
+    private StorePojo convertRowsToPojo(String dataRow) {
+<span class="nc" id="L57">        StringTokenizer st = new StringTokenizer(dataRow, &quot;\t&quot;);</span>
+<span class="nc" id="L58">        StorePojo storePojo = new StorePojo();</span>
+<span class="nc" id="L59">        List&lt;String&gt; dataArray = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        while (st.hasMoreElements()) {</span>
+<span class="nc" id="L61">            dataArray.add(st.nextElement().toString());</span>
+        }
+<span class="nc" id="L63">        storePojo.setBranch(dataArray.get(0));</span>
+<span class="nc" id="L64">        storePojo.setCity(dataArray.get(1));</span>
+<span class="nc" id="L65">        return storePojo;</span>
+    }
+
+    private boolean checkFileHeading(String dataRow) {
+<span class="nc" id="L69">        StringTokenizer st = new StringTokenizer(dataRow, &quot;\t&quot;);</span>
+<span class="nc" id="L70">        List&lt;String&gt; dataArray = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">        while (st.hasMoreElements()) {</span>
+<span class="nc" id="L72">            dataArray.add(st.nextElement().toString());</span>
+        }
+<span class="nc bnc" id="L74" title="All 4 branches missed.">        if (dataArray.get(0).equals(&quot;Branch&quot; )==false || dataArray.get(1).equals(&quot;City&quot;)==false ) {</span>
+<span class="nc" id="L75">            return false;</span>
+        }
+<span class="nc" id="L77">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
