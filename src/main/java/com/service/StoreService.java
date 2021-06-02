@@ -28,4 +28,10 @@ public class StoreService {
         return storeDao.selectAll();
     }
 
+    public void exists(StorePojo input) throws ApiException {
+        StorePojo storePojo =  storeDao.select(input.getBranch());
+        if(storePojo!=null){
+            throw new ApiException("Store already exists.");
+        }
+    }
 }

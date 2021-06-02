@@ -114,12 +114,12 @@ function updateSalesFileName(){
 //    });
 //}
 
-function uploadFile($file){
+function uploadFile($file, url){
     var file2 = $file[0].files[0];
     console.log(file2);
     formData = new FormData();
     formData.append("file",file2);
-    url = getStoreUrl();
+//    url = getStoreUrl();
     ajaxFileUploadRequest(url,'POST',formData);
 }
 
@@ -171,7 +171,6 @@ function init(){
     $('#process-data-sales').click(() => uploadFile($('#sales-file')));
     $('#process-data-sku').click(() => uploadFile($('#sku-file')));
 
-    $('#process-data-style').click(uploadStyleFile);
     $('#download-style').click(() => downloadFiles(getStyleUrl(),"Style"));
     $('#download-store').click(() => downloadFiles(getStoreUrl(),"Store"));
     $('#download-sku').click(() => downloadFiles(getSkuUrl(),"Sku"));

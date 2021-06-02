@@ -1,12 +1,11 @@
 package com.dto;
 
 import com.pojo.SkuPojo;
-import com.pojo.StorePojo;
-import com.pojo.StylePojo;
 import com.service.ApiException;
 import com.service.SkuService;
 import com.service.StyleService;
 import com.util.FileUtil;
+import com.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -38,11 +37,9 @@ public class SkuDto {
         }
         dataRow = TSVFile.readLine();
 
-        int rowNumber = 1;
         while (dataRow != null) {
             skuService.add(convertRowsToPojo(dataRow));
             dataRow = TSVFile.readLine(); // Read next line of data.
-            rowNumber++;
         }
     }
 
@@ -67,7 +64,7 @@ public class SkuDto {
         FileUtil.downloadFile("error-files/sku-error", response);
     }
 
-    public boolean scanFileForErrors(MultipartFile file) throws IOException {
+    public boolean scanFileForErrors(MultipartFile file) throws IOException, ApiException {
         BufferedReader TSVFile = new BufferedReader(new
                 InputStreamReader(file.getInputStream(), "UTF-8"));
         boolean ans = false;
@@ -79,22 +76,32 @@ public class SkuDto {
         PrintWriter dos = new PrintWriter(fos);
         while (dataRow != null) {
             try {
-                skuService.exists(convertRowsToPojo(dataRow));
+                SkuPojo dataConverted = convertRowsToPojo(dataRow);
+                dataConverted = normalize(dataConverted);
+                check(dataConverted);
+                skuService.exists(dataConverted);
             } catch (ApiException e) {
-                String x = e.getMessage();
-                System.out.println(dataRow + '\t' + e.getMessage());
-                dos.print(x);
-                dos.println();
-                dos.print(x);
-//                FileUtil.addrow("error-files/style-error.txt",x);
+                dos.print(rowNumber+'\t'+dataRow+'\t'+e.getMessage());
                 ans = true;
             }
-            System.out.println(rowNumber);
+            fos.close();
             rowNumber++;
             dataRow = TSVFile.readLine(); // Read next line of data.
         }
 
         return ans;
+    }
+
+    private void check(SkuPojo dataConverted) throws ApiException {
+        if(StringUtil.isEmpty(dataConverted.getSize()) || StringUtil.isEmpty(dataConverted.getSkuCode())){
+            throw new ApiException("One or more fields are empty.");
+        }
+    }
+
+    private SkuPojo normalize(SkuPojo dataConverted) {
+        dataConverted.setSize(StringUtil.toLowerCaseTrim(dataConverted.getSize()));
+        dataConverted.setSkuCode(StringUtil.toLowerCaseTrim(dataConverted.getSkuCode()));
+        return dataConverted;
     }
 
     private void refreshFile() throws IOException {
@@ -112,7 +119,7 @@ public class SkuDto {
             dataArray.add(st.nextElement().toString());
         }
         skuPojo.setSkuCode(dataArray.get(0));
-        skuPojo.setStyleId(styleService.select(dataArray.get(1)));
+        skuPojo.setStyleId(styleService.select(StringUtil.toLowerCaseTrim(dataArray.get(1))));
         skuPojo.setSize(dataArray.get(2));
         return skuPojo;
     }

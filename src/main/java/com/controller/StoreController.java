@@ -25,6 +25,12 @@ public class StoreController {
         storeDto.add(file);
     }
 
+    @ApiOperation(value = "Download errors")
+    @RequestMapping(path = "/errors",method = RequestMethod.GET)
+    public void downloadErrors(HttpServletResponse response) throws IOException, ApiException {
+        storeDto.downloadErrors(response);
+    }
+
     @ApiOperation(value = "Display all stores")
     @RequestMapping(method = RequestMethod.GET)
     public void selectAll(HttpServletResponse response) throws IOException {

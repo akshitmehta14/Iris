@@ -20,6 +20,9 @@ public class StyleService {
     }
 
     public int select(String styleCode) throws ApiException {
+        if (styleCode == "") {
+            throw new ApiException("One or more field empty.");
+        }
         StylePojo stylePojo =  styleDao.select(styleCode);
         if(stylePojo == null){
             throw new ApiException("No such style exists.");
