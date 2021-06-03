@@ -10,4 +10,12 @@ public class DatatypeConversion {
     public static int convertStringToInteger(String number){
         return Integer.parseInt(number);
     }
+
+    public static String convertDoubleToString(double number){
+        return String.valueOf(number);
+    }
+
+    public static String convertDateToString(LocalDate date){
+        return date.toString();
+    }
 }

@@ -17,8 +17,8 @@ public class AlgoRunController {
     @Autowired
     private AlgoDto algoDto;
 
-    @ApiOperation(value = "Runs the Algorithm")
-    @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value = "Adds the parameters")
+    @RequestMapping(path = "/input" ,method = RequestMethod.POST)
     public void addParameters(@RequestBody InputForm input) throws ApiException {
         System.out.println(input.getLiquidationMultiplier());
         System.out.println(input.getDate());
@@ -27,7 +27,6 @@ public class AlgoRunController {
     }
 
     @ApiOperation(value = "Runs the Algorithm")
-    // TODO re-look the request method
     @RequestMapping(method = RequestMethod.GET)
     public void runAlgo() throws ApiException, IOException {
         algoDto.algoRun();

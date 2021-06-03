@@ -164,12 +164,12 @@ function init(){
     $('#style-file').on('change', updateStyleFileName);
     $('#store-file').on('change', updateStoreFileName);
     $('#sku-file').on('change',updateSkuFileName);
-    $('#store-file').on('change', updateStoreFileName);
+    $('#sales-file').on('change', updateSalesFileName);
 
-    $('#process-data-style').click(() => uploadFile($('#style-file')));
-    $('#process-data-store').click(() => uploadFile($('#store-file')));
-    $('#process-data-sales').click(() => uploadFile($('#sales-file')));
-    $('#process-data-sku').click(() => uploadFile($('#sku-file')));
+    $('#process-data-style').click(() => uploadFile($('#style-file'),getStyleUrl()));
+    $('#process-data-store').click(() => uploadFile($('#store-file'),getStoreUrl()));
+    $('#process-data-sales').click(() => uploadFile($('#sales-file'),getSalesUrl()));
+    $('#process-data-sku').click(() => uploadFile($('#sku-file'),getSkuUrl()));
 
     $('#download-style').click(() => downloadFiles(getStyleUrl(),"Style"));
     $('#download-store').click(() => downloadFiles(getStoreUrl(),"Store"));

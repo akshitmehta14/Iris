@@ -10,10 +10,16 @@ import java.util.List;
 @Repository
 public class AlgoParametersDao extends AbstractDao{
     private String SELECT_ALL = "Select p from AlgoInputPojo p";
+    private String Delete_ALL = "DELETE from AlgoInputPojo";
 
     @Transactional
     public void add(AlgoInputPojo inputPojo){
         em().persist(inputPojo);
+    }
+
+    @Transactional
+    public void delete(){
+        em().createQuery(Delete_ALL).executeUpdate();
     }
 
     public List<AlgoInputPojo> selectAll(){

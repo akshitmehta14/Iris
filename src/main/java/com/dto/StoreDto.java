@@ -69,7 +69,7 @@ public class StoreDto {
         int rowNumber = 1;
         refreshFile();
         dataRow = TSVFile.readLine();
-        FileWriter fos = new FileWriter("files/error-files/style-error.txt", true);
+        FileWriter fos = new FileWriter("files/error-files/store-error.txt", true);
         PrintWriter dos = new PrintWriter(fos);
         while (dataRow != null) {
             StorePojo dataConverted = convertRowsToPojo(dataRow);
@@ -81,10 +81,9 @@ public class StoreDto {
                 String x = dataRow + '\t' + e.getMessage();
                 System.out.println(x);
 
-                dos.println(rowNumber+"\t"+x);
+                dos.println(rowNumber+"\t"+dataRow + "\t" + e.getMessage());
                 ans = true;
             }
-            System.out.println(rowNumber);
             rowNumber++;
             dataRow = TSVFile.readLine(); // Read next line of data.
         }

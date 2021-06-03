@@ -21,7 +21,6 @@ public class LiquidationPojo {
 
     private String category;
     private String subCategory;
-    private String priceBucket;
     private double avgDiscount;
     private double AvgDiscountAfterCleanup;
     private double revenueCleanup;
@@ -40,14 +39,6 @@ public class LiquidationPojo {
 
     public void setSubCategory(String subCategory) {
         this.subCategory = subCategory;
-    }
-
-    public String getPriceBucket() {
-        return priceBucket;
-    }
-
-    public void setPriceBucket(String priceBucket) {
-        this.priceBucket = priceBucket;
     }
 
     public double getAvgDiscount() {

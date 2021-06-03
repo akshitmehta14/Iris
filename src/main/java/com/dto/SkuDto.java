@@ -64,7 +64,7 @@ public class SkuDto {
         FileUtil.downloadFile("error-files/sku-error", response);
     }
 
-    public boolean scanFileForErrors(MultipartFile file) throws IOException, ApiException {
+    public boolean scanFileForErrors(MultipartFile file) throws IOException {
         BufferedReader TSVFile = new BufferedReader(new
                 InputStreamReader(file.getInputStream(), "UTF-8"));
         boolean ans = false;
@@ -81,14 +81,13 @@ public class SkuDto {
                 check(dataConverted);
                 skuService.exists(dataConverted);
             } catch (ApiException e) {
-                dos.print(rowNumber+'\t'+dataRow+'\t'+e.getMessage());
+                dos.println(rowNumber+"\t"+dataRow+"\t"+e.getMessage());
                 ans = true;
             }
-            fos.close();
             rowNumber++;
             dataRow = TSVFile.readLine(); // Read next line of data.
         }
-
+        fos.close();
         return ans;
     }
 

@@ -5,7 +5,7 @@ function getAlgoUrl(){
 }
 
 function addInputParameters(){
-    url = getAlgoUrl();
+    url = getAlgoUrl()+"/inputs";
     var $form = $("#report-form");
 	var json = toJson($form);
 	console.log(json);

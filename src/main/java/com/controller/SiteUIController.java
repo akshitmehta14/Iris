@@ -30,8 +30,6 @@ public class SiteUIController {
 
     private ModelAndView getMav(String page) {
         ModelAndView mav = new ModelAndView(page);
-        // TODO remove unnecessary objects
-        mav.addObject("info", new InfoData());
         mav.addObject("baseUrl", baseUrl);
         return mav;
     }

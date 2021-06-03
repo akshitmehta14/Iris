@@ -14,6 +14,7 @@ public class AlgoService {
 
     public void addParameters(AlgoInputPojo inputPojo) throws ApiException {
         checkParameters(inputPojo);
+        algoParametersDao.delete();
         algoParametersDao.add(inputPojo);
     }
 
