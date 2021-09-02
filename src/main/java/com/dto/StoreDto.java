@@ -117,8 +117,8 @@ public class StoreDto {
         while (st.hasMoreElements()) {
             dataArray.add(st.nextElement().toString());
         }
-        storePojo.setBranch(dataArray.get(0));
-        storePojo.setCity(dataArray.get(1));
+        storePojo.setBranch(StringUtil.toLowerCaseTrim(dataArray.get(0)));
+        storePojo.setCity(StringUtil.toLowerCaseTrim(dataArray.get(1)));
         return storePojo;
     }
 

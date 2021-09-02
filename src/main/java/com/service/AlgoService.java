@@ -18,24 +18,17 @@ public class AlgoService {
         algoParametersDao.add(inputPojo);
     }
 
-    public AlgoInputPojo selectRecent(){
+    public AlgoInputPojo selectRecent() throws ApiException {
         List<AlgoInputPojo> list =  algoParametersDao.selectAll();
+        if(list.size()==0){
+            throw new ApiException("Add some parameters first.");
+        }
         return list.get(list.size()-1);
     }
 
     private void checkParameters(AlgoInputPojo inputPojo) throws ApiException {
-        if(inputPojo.getBadSize()==0.0 && inputPojo.getGoodSize()==0.0){
-            inputPojo.setGoodSize(75);
-            inputPojo.setBadSize(25);
-        }
-        if(inputPojo.getGoodSize()==0.0){
-            inputPojo.setGoodSize(inputPojo.getBadSize());
-        }
-        if(inputPojo.getBadSize()==0.0){
-            inputPojo.setBadSize(inputPojo.getGoodSize());
-        }
-        if(inputPojo.getGoodSize()<inputPojo.getBadSize()){
-            throw new ApiException("Good Size percentage cannot be greater than bad size percentage.");
+        if(inputPojo.getGoodSize()<=inputPojo.getBadSize()){
+            throw new ApiException("Good Size percentage cannot be less than bad size percentage.");
         }
 
     }

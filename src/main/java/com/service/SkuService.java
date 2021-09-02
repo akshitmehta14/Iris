@@ -17,6 +17,10 @@ public class SkuService {
         skuDao.add(skuPojo);
     }
 
+    public String selectById(int id){
+        return skuDao.selectById(id).getSkuCode();
+    }
+
     public int select(String skuCode) throws ApiException {
         SkuPojo skuPojo = skuDao.select(skuCode);
         if(skuPojo==null){

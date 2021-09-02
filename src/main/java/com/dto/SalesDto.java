@@ -53,9 +53,9 @@ public class SalesDto {
         List<SalesPojo> salesPojo = salesService.selectAll();
         FileWriter fos = new FileWriter("files/downloads/sku.txt",false);
         PrintWriter dos = new PrintWriter(fos);
-        dos.println("SKU\tStyle Code\tSize");
+        dos.println("Date\tSku Code\tStore\tQuantity\tDiscount\tRevenue");
         for(SalesPojo s:salesPojo){
-            dos.println(s.getDate().getDayOfMonth()+"/"+s.getDate().getMonthValue()+"/"+s.getDate().getYear()+'\t'+s.getQuantity()+'\t'+s.getDiscount()+'\t'+s.getRevenue());
+            dos.println(s.getDate().getDayOfMonth()+"/"+s.getDate().getMonthValue()+"/"+s.getDate().getYear()+'\t'+skuService.selectById(s.getSkuId())+'\t'+storeService.selectById(s.getStoreId())+'\t'+s.getQuantity()+'\t'+s.getDiscount()+'\t'+s.getRevenue());
         }
         fos.close();
         FileUtil.downloadFile("downloads/sku",response);

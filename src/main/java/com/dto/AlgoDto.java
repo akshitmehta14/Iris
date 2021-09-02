@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,13 +40,13 @@ public class AlgoDto {
         algoService.addParameters(inputPojo);
     }
 
-    public void algoRun() throws IOException {
+    public void algoRun() throws IOException, ApiException {
         AlgoInputPojo input = algoService.selectRecent();
         System.out.println(input.getLiquidationMultiplier());
         List<SalesPojo> list = salesService.selectAll();
         List<SalesData> salesData = convertIntoSalesData(list);
         List<SalesData> cleanedSales = liquidationCleanup(salesData, input.getLiquidationMultiplier());
-        noosReport(cleanedSales);
+        noosReport(cleanedSales,input.getDate());
         goodSizes(cleanedSales, input.getGoodSize(), input.getBadSize());
     }
 
@@ -95,12 +96,12 @@ public class AlgoDto {
     }
 
     //
-    private void noosReport(List<SalesData> cleanedSales) throws IOException {
+    private void noosReport(List<SalesData> cleanedSales,LocalDate input) throws IOException {
 
         // key -> category
         HashMap<String, NoosData> noosCategoryDataMap = new HashMap<String, NoosData>();
         HashMap<String, NoosData> noosStyleDataMap = new HashMap<String, NoosData>();
-//        cleanedSales = cleanedSales.stream().filter(sale -> sale.getDate().isAfter(LocalDate.MIN)).collect(Collectors.toList());
+        cleanedSales = cleanedSales.stream().filter(sale -> sale.getDate().isBefore(input)).filter(sale -> sale.getDate().isAfter(input.minusMonths(6))).collect(Collectors.toList());
 
         // 1. aggregate revenue to cat level
         // 2. first sale day & last sale day for each category
@@ -135,7 +136,7 @@ public class AlgoDto {
         // 2. calculate style ros
         for (SalesData salesData : cleanedSales) {
             NoosPojo noosPojo = finalNoos.computeIfAbsent(salesData.getStyleCode(),o-> new NoosPojo());
-            double addition = salesData.getRevenue() * 100 / noosStyleDataMap.get(salesData.getStyleCode()).getRevenue();
+            double addition = salesData.getRevenue() * 100 / noosCategoryDataMap.get(salesData.getCategory()).getRevenue();
             noosPojo.setStyleRevContri(noosPojo.getStyleRevContri() + addition);
             double additionInRos = salesData.getQuantity() / (DateUtil.differenceInDays(noosStyleDataMap.get(salesData.getStyleCode()).getFirstSaleDay(), noosStyleDataMap.get(salesData.getStyleCode()).getLastSaleDay())+1);
             noosPojo.setStyleRos(noosPojo.getStyleRos() + additionInRos);
@@ -273,5 +274,8 @@ public class AlgoDto {
         return inputs;
     }
 
+    public AlgoInputPojo getParameters() throws ApiException {
+        return algoService.selectRecent();
+    }
 }
 

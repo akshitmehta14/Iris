@@ -4,6 +4,8 @@ import com.pojo.StylePojo;
 import com.service.ApiException;
 import com.service.StyleService;
 import com.util.FileUtil;
+import com.util.StringUtil;
+import javafx.beans.binding.StringBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +27,7 @@ public class StyleDto {
                 InputStreamReader(file.getInputStream(), "UTF-8"));
         String dataRow = TSVFile.readLine(); // Read first line.
         if (checkFileHeading(dataRow) == false) {
-            throw new ApiException("File orientation is not proper");
+            throw new ApiException("File headings are not proper");
         }
         boolean errors = scanFileForErrors(file);
         if (errors) {
@@ -104,12 +106,12 @@ public class StyleDto {
         while (st.hasMoreElements()) {
             dataArray.add(st.nextElement().toString());
         }
-        stylePojo.setStyleCode(dataArray.get(0));
-        stylePojo.setBrand(dataArray.get(1));
-        stylePojo.setCategory(dataArray.get(2));
-        stylePojo.setSubCategory(dataArray.get(3));
-        stylePojo.setMrp(Double.parseDouble(dataArray.get(4)));
-        stylePojo.setGender(dataArray.get(5));
+        stylePojo.setStyleCode(StringUtil.toLowerCaseTrim(dataArray.get(0)));
+        stylePojo.setBrand(StringUtil.toLowerCaseTrim(dataArray.get(1)));
+        stylePojo.setCategory(StringUtil.toLowerCaseTrim(dataArray.get(2)));
+        stylePojo.setSubCategory(StringUtil.toLowerCaseTrim(dataArray.get(3)));
+        stylePojo.setMrp(Double.parseDouble(StringUtil.toLowerCaseTrim(dataArray.get(4))));
+        stylePojo.setGender(StringUtil.toLowerCaseTrim(dataArray.get(5)));
         return stylePojo;
     }
 

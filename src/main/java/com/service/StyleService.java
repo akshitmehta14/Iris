@@ -33,6 +33,10 @@ public class StyleService {
         return styleDao.selectAll();
     }
 
+    public String selectById(int id){
+        return styleDao.selectById(id).getStyleCode();
+    }
+
     public void exists(StylePojo input) throws ApiException {
         StylePojo stylePojo =  styleDao.select(input.getStyleCode());
         if(stylePojo!=null){

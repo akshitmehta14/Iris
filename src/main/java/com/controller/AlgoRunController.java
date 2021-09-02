@@ -2,6 +2,7 @@ package com.controller;
 
 import com.dto.AlgoDto;
 import com.model.InputForm;
+import com.pojo.AlgoInputPojo;
 import com.service.ApiException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,12 @@ public class AlgoRunController {
         System.out.println(input.getDate());
         System.out.println(input.getBadSize());
         algoDto.addParameters(input);
+    }
+
+    @ApiOperation(value = "Retrieves the parameters.")
+    @RequestMapping(path = "/input", method = RequestMethod.GET)
+    public AlgoInputPojo getParameters() throws ApiException{
+        return algoDto.getParameters();
     }
 
     @ApiOperation(value = "Runs the Algorithm")

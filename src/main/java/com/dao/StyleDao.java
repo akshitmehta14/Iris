@@ -11,6 +11,7 @@ import java.util.List;
 public class StyleDao extends AbstractDao {
     private static String SELECT = "Select p from StylePojo p where p.styleCode=:styleCode";
     private static String SELECT_ALL = "Select p from StylePojo p";
+    private static String SELECT_BY_ID = "Select p from StylePojo p where p.id=:id";
 
     @Transactional
     public void add(StylePojo stylePojo) {
@@ -23,6 +24,13 @@ public class StyleDao extends AbstractDao {
         query.setParameter("styleCode", styleCode);
         return getSingle(query);
     }
+
+    public StylePojo selectById(int id){
+        TypedQuery<StylePojo> query = getQuery(SELECT_BY_ID, StylePojo.class);
+        query.setParameter("id", id);
+        return getSingle(query);
+    }
+
     public List<StylePojo> selectAll(){
         TypedQuery<StylePojo> query = getQuery(SELECT_ALL, StylePojo.class);
         return query.getResultList();

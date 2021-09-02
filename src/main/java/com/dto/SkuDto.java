@@ -49,7 +49,7 @@ public class SkuDto {
         PrintWriter dos = new PrintWriter(fos);
         dos.println("SKU\tStyle Code\tSize");
         for(SkuPojo s:skuPojo){
-            dos.print(s.getSkuCode()+'\t'+s.getStyleId()+'\t'+s.getSize());
+            dos.print(s.getSkuCode()+'\t'+styleService.selectById(s.getStyleId())+'\t'+s.getSize());
             dos.println();
         }
         fos.close();
